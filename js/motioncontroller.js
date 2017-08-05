@@ -1,25 +1,32 @@
-//export { PlayerController }
+//export { MotionController }
 
-var PlayerController = {
+var MotionController = {
 
     __worldDirection: new THREE.Vector3(),
     __orthogonalVector: new THREE.Vector3(),
     yAxisUnitVector: new THREE.Vector3(0, 1, 0),
     q: new THREE.Quaternion(),
+    controlledObject: null,
 
-    // TODO: Remove hardcoded camera reference
     // TODO: Add default arguments to allow different step sizes
+
+    /*
+     * Set the object to be controlled by this MotionController
+     */
+    setControlledObject(cObj) {
+        this.controlledObject = cObj;
+    },
 
     /*
      * Longitudinal movement
      */
     moveForward() {
-        camera.position.add(this.worldDirection);
+        this.controlledObject.position.add(this.worldDirection);
     },
 
     moveBackward() {
         // Negate for backwards movement
-        camera.position.add(this.worldDirection.negate());
+        this.controlledObject.position.add(this.worldDirection.negate());
     },
 
     /*
@@ -27,11 +34,11 @@ var PlayerController = {
      */
     moveLeft() {
         // Negate for leftwards movement
-        camera.position.add(this.orthogonalVector.negate());
+        this.controlledObject.position.add(this.orthogonalVector.negate());
     },
 
     moveRight() {
-        camera.position.add(this.orthogonalVector);
+        this.controlledObject.position.add(this.orthogonalVector);
     },
 
     /*
@@ -40,13 +47,13 @@ var PlayerController = {
     lookLeft() {
         // Define a counter clockwise rotation around the y-axis
         this.q.setFromEuler(new THREE.Euler(0, 0.05 * Math.PI, 0));
-        camera.applyQuaternion(this.q);
+        this.controlledObject.applyQuaternion(this.q);
     },
 
     lookRight() {
         // Define a clockwise (negative radians) rotation around the y-axis
         this.q.setFromEuler(new THREE.Euler(0, -0.05 * Math.PI, 0));
-        camera.applyQuaternion(this.q);
+        this.controlledObject.applyQuaternion(this.q);
     },
 
     /*
@@ -55,21 +62,21 @@ var PlayerController = {
     lookUp() {
         // Define a counter clockwise rotation around the axis orthogonal to the world direction and y-axis
         this.q.setFromAxisAngle(this.orthogonalVector, 0.05 * Math.PI);
-        camera.applyQuaternion(this.q);
+        this.controlledObject.applyQuaternion(this.q);
     },
 
     lookDown() {
         // Define a clockwise (negative radians) rotation around the axis orthogonal to the world direction and y-axis
         this.q.setFromAxisAngle(this.orthogonalVector, -0.05 * Math.PI);
-        camera.applyQuaternion(this.q);
+        this.controlledObject.applyQuaternion(this.q);
     },
 
     /*
      * Helper methods
      */
      get worldDirection() {
-         // Update and return camera world direction
-         camera.getWorldDirection(this.__worldDirection);
+         // Update and return the world direction
+         this.controlledObject.getWorldDirection(this.__worldDirection);
          return this.__worldDirection;
      },
 
