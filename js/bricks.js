@@ -1,4 +1,4 @@
-//import { PlayerController } from "playercontroller.js"
+//import { MotionController } from "motioncontroller.js"
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -108,6 +108,9 @@ window.addEventListener("resize", function() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
 }, false);
+
+var PlayerController = Object.create(MotionController);
+PlayerController.setControlledObject(camera);
 
 // Handle keyboard input
 document.addEventListener("keypress", (e) => {
